@@ -48,7 +48,7 @@ This is a mini version of the `grep` command implemented as a bash script. It al
 
 5. **Inverted Match**: If the `-v` flag is set, it outputs lines that do not match the pattern.
 
-## Extending the Script
+## If you were to support regex or -i/-c/-l options, how would your structure change?
 
 To support regex or additional options like `-i` (case-insensitive), `-c` (count matches), or `-l` (list filenames only):
 
