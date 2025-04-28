@@ -1,12 +1,7 @@
-# DNS/Network Troubleshooting Guide
-
+# DNS/Network Troubleshooting Guide 📕
 This guide outlines the steps to troubleshoot, verify, and restore connectivity to an internal web service that is suddenly unreachable.
 
-## Scenario
-
-The internal web dashboard (hosted on `internal.example.com`) is suddenly unreachable from multiple systems. The service seems up, but users get "host not found" errors. This suggests a DNS or network misconfiguration issue.
-
-## Troubleshooting Steps
+## Troubleshooting Steps 📝
 
 ### 1. Verify DNS Resolution
 
@@ -54,6 +49,8 @@ openssl s_client -connect internal.example.com:443
 # Check locally running services
 ss -tulpn | grep -E ':(80|443)'
 ```
+### Screenshot of Steps 1 & 2 📷
+![verify and diagnose](https://github.com/user-attachments/assets/5f1050f4-5642-4eff-bf80-00f33db16773)
 
 ### 3. Potential Causes
 
@@ -98,6 +95,9 @@ nsupdate
 > send
 > quit
 ```
+**Screenshot 📷**
+![Missing DNS record issue a](https://github.com/user-attachments/assets/f7f433ed-4e4d-4a66-8f4e-934c38ff1100)
+
 
 **Incorrect DNS Servers**
 ```bash
@@ -118,39 +118,39 @@ sudo nano /etc/NetworkManager/system-connections/your-connection.nmconnection
 
 sudo systemctl restart NetworkManager
 ```
+**Screenshots 📷**
+![b1](https://github.com/user-attachments/assets/3a7205e5-059c-47ec-9e0b-7b9e47e6a60a)
+![b2](https://github.com/user-attachments/assets/87278baa-50ef-4a45-ae34-688a2785fed6)
+![b3](https://github.com/user-attachments/assets/805a2fd9-119e-4d4d-9ed3-7ece15df1fc9)
+![b4](https://github.com/user-attachments/assets/dc178d30-6440-4862-bdc7-6706a2203f2b)
+
 
 #### Network Connectivity Issues:
-
-**Firewall Blocking**
-```bash
-# Allow web traffic
-sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
-sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
-
-# Make persistent
-sudo netfilter-persistent save
-```
-
 **Routing Issues**
 ```bash
+# Check route to server
+traceroute internal.example.com
 # Add specific route
 sudo ip route add 192.168.1.0/24 via 192.168.0.1 dev eth0
 ```
+**Screenshot 📷**
+![routing issues](https://github.com/user-attachments/assets/0a985d9e-08bc-4b7c-b71c-5ed8bd930cba)
+
 
 #### Service Issues:
-
 **Web Server Not Running**
 ```bash
+# Check if service is running
+ssh admin@internal.example.com "systemctl status nginx"  # or apache2
+# Check listening ports
+ssh admin@internal.example.com "ss -tulpn | grep -E ':(80|443)'"
 # Start the web service
-sudo systemctl start nginx  # or apache2
+ssh admin@internal.example.com "sudo systemctl start nginx"  # or apache2
 ```
+**Screenshot 📷**
+![web server not running](https://github.com/user-attachments/assets/a5f0e498-b120-4cf5-8a0c-90353c79386a)
 
-**Virtual Host Configuration**
-```bash
-# Check and fix config
-sudo nano /etc/nginx/sites-enabled/internal.example.com
-sudo nginx -t && sudo systemctl restart nginx
-```
+
 
 ### 5. Bonus: Local Testing with /etc/hosts
 
@@ -164,6 +164,9 @@ sudo nano /etc/hosts
 # Test resolution
 getent hosts internal.example.com
 ```
+**Screenshots 📷**
+![Capture](https://github.com/user-attachments/assets/04e6db41-5a71-4a2a-b3f8-17b16cce69e8)
+![Capture1](https://github.com/user-attachments/assets/ac1bf2c0-0119-4603-9e48-44481b75025f)
 
 ### Configure Persistent DNS Settings:
 
@@ -180,20 +183,6 @@ Domains=example.com
 
 sudo systemctl restart systemd-resolved
 ```
-
-#### Using NetworkManager:
-
-```bash
-sudo nmcli connection modify "Your Connection" ipv4.dns "192.168.1.53 8.8.8.8"
-sudo nmcli connection modify "Your Connection" ipv4.dns-search "example.com"
-sudo nmcli connection down "Your Connection" && sudo nmcli connection up "Your Connection"
-```
-
-## Documentation Best Practices
-
-When troubleshooting, always:
-1. Document the issue with screenshots
-2. Record each command used and its output
-3. Note the specific changes made to resolve the issue
-4. Test to confirm the solution works
-5. Document the root cause and solution for future reference
+**Screenshots 📷**
+![Capture](https://github.com/user-attachments/assets/a06ad672-659f-4849-989e-72371520ddb1)
+![Capture1](https://github.com/user-attachments/assets/9d7a488d-ead3-457a-a556-d1314596c2de)
