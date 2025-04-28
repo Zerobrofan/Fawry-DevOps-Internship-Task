@@ -2,6 +2,10 @@
 
 This is a mini version of the `grep` command implemented as a bash script. It allows you to search for text patterns within files with some basic command-line options.
 
+## Task Screenshot
+![task1](https://github.com/user-attachments/assets/22c44cfd-573d-4d7f-947c-aaa8dd0333aa)
+
+
 ## Features
 
 - Case-insensitive string searching
